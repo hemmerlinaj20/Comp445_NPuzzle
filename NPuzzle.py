@@ -4,19 +4,25 @@ class NPuzzle:
     """Stores the state and methods of an n-puzzle.
     
     When initialized, creates a randomly generated n-puzzle state
-    that is guarenteed to be solvable.
+    that is guarenteed to be solvable. May also initialize the puzzle
+    with a chosen state specified by the input arguments.*
+
     *Note: n+1 must be a perfect square.
+    *Note: When given a starting state, init DOES NOT check for illegal states.
     """
 
     state: list[list[int]]
     n: int
 
-    def __init__(self, n: int):
+    def __init__(self, n: int, state: list[list[int]] = None):
         self.n = n
         if not math.sqrt(n+1).is_integer():
             raise Exception("n+1 must be a perfect square")
         # TODO: Randomize self.state
-        self.state = self.goal_state
+        if state is not None:
+            self.state = state
+        else:
+            self.state = self.goal_state
 
     @property
     def goal_state(self) -> list[list[int]]:
