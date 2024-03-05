@@ -2,6 +2,11 @@ import unittest
 from NPuzzle import NPuzzle
 
 class NPuzzle_tests(unittest.TestCase):
+    """THE TESTS WILL FAIL WITH THE RANDOMIZER IMPLEMENTED
+    
+    Everything was tested before the randomizer and passed. To check this, comment out
+    'self.__randomize__()' in the NPuzzle __init__() method, then run the tests.
+    """
 
     def test_init(self):
         eight_puzzle = [[1,2,3],[4,5,6],[7,8,0]]

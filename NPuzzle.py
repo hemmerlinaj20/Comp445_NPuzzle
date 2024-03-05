@@ -1,4 +1,5 @@
 import math
+import random
 
 class NPuzzle:
     """Stores the state and methods of an n-puzzle.
@@ -8,7 +9,9 @@ class NPuzzle:
     with a chosen state specified by the input arguments.*
 
     *Note: n+1 must be a perfect square.
-    *Note: When given a starting state, init DOES NOT check for illegal states.
+    *Note: When given a starting state, init DOES NOT check for illegal states. So be sure to
+    check that the assigned state is a legal n-puzzle format. Any given state is not guarenteed
+    to be solvable.
     """
 
     state: list[list[int]]
@@ -18,11 +21,11 @@ class NPuzzle:
         self.n = n
         if not math.sqrt(n+1).is_integer():
             raise Exception("n+1 must be a perfect square")
-        # TODO: Randomize self.state
         if state is not None:
             self.state = state
         else:
             self.state = self.goal_state
+            self.__randomize__()
 
     @property
     def goal_state(self) -> list[list[int]]:
@@ -141,3 +144,24 @@ class NPuzzle:
             for val in row:
                 if val == tile:
                     return (self.state.index(row), row.index(val))
+                
+    def __randomize__(self):
+        for i in range(0,1000):
+            num = random.randrange(0,1000)/1000
+            if num < .25:
+                self.move_up()
+            elif num < .5:
+                self.move_down()
+            elif num < .75:
+                self.move_left()
+            else:
+                self.move_right()
+
+if __name__ == '__main__':
+    p1 = NPuzzle(8)
+    p2 = NPuzzle(8)
+    p3 = NPuzzle(8)
+
+    print(p1.state)
+    print(p2.state)
+    print(p3.state)
