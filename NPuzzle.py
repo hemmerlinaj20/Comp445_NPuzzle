@@ -137,7 +137,7 @@ class NPuzzle:
         return True
 
     def __find_tile__(self, tile: int) -> tuple[int, int]:
-        """Returns the location of the blank space in the puzzle.
+        """Returns the location of the specified tile in the puzzle.
         
         Location is in the form of (row, column), zero indexed.
         """
@@ -148,6 +148,11 @@ class NPuzzle:
                     return (self.state.index(row), row.index(val))
                 
     def __randomize__(self):
+        """Randomizes the state of the puzzle.
+        
+        Randomly performs 1000 moves on the puzzle to randomize the tile positions
+        """
+        
         for i in range(0,1000):
             num = random.randrange(0,1000)/1000
             if num < .25:
@@ -159,11 +164,45 @@ class NPuzzle:
             else:
                 self.move_right()
 
+    def manhatten_distance(self) -> int:
+        """Returns the total manhatten distance of the combined tiles
+        
+        Calculates the manhatten distance of each tile and returns the sum of the distances.
+        """
+
+        dist = 0
+        for tile in range(1, self.n+1):
+            dist += self.__manhatten_helper__(tile)
+        return dist
+
+    def __manhatten_helper__(self, tile: int) -> int:
+        """Calculates and returns the manhatten distance for the specified tile."""
+
+        tile_loc = self.__find_tile__(tile)
+        dist = abs(tile_loc[0] - self.solved_positions[tile][0]) + abs(tile_loc[1] - self.solved_positions[tile][1])
+        #print(f'Tile: {tile} Dist: {dist}')
+        return dist
+    
+    @property
+    def solved_positions(self) -> dict[int:tuple[int,int]]:
+        """The positions of each tile when the puzzle is solved.
+        
+        A dictionary mapping int (tile) to its solved position (tuple[int, int])
+        """
+
+        solved_positions = {}
+        t = 1
+        for row in range(0, int(math.sqrt(self.n+1))):
+            for col in range(0, int(math.sqrt(self.n+1))):
+                solved_positions[t] = (row, col)
+                t += 1
+        return solved_positions
+
 if __name__ == '__main__':
-    p1 = NPuzzle(8)
-    p2 = NPuzzle(8)
-    p3 = NPuzzle(8)
+    p1 = NPuzzle(15)
+    p2 = NPuzzle(15)
 
     print(p1.state)
+    print(p1.manhatten_distance())
     print(p2.state)
-    print(p3.state)
+    print(p2.manhatten_distance())
