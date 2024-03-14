@@ -1,3 +1,5 @@
+# Author: Alex Hemmerlin
+
 import math
 import random
 
@@ -11,7 +13,7 @@ class NPuzzle:
     *Note: n+1 must be a perfect square.
     *Note: When given a starting state, init DOES NOT check for illegal states. So be sure to
     check that the assigned state is a legal n-puzzle format. Any given state is not guarenteed
-    to be solvable.
+    to be solvable. Undefined behaviour may occur if given an illegal/improper starting instance.
     """
 
     state: list[list[int]]
