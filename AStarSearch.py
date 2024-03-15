@@ -81,6 +81,7 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
             if i == 3 and successor.move_left():
                 generate_successor(successor, parent, g, fringe, closed, verbosity)
 
+    # if the fringe is empty without finding a goal state, then the puzzle is unsolvable so return false
     return False
 
 
@@ -91,6 +92,6 @@ if __name__ == '__main__':
     if result != False:
         print(result.priority)
         print(result.puzzle.state)
-        print(result.parent)
+        print(result.parent.puzzle.state)
     else:
-        print('bad')
+        print('Bad: Most likely unsolvable (At least I hope so lol)')
