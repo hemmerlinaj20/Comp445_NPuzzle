@@ -2,6 +2,7 @@
 
 import math
 import random
+import copy
 
 class NPuzzle:
     """Stores the state and methods of an n-puzzle.
@@ -14,6 +15,7 @@ class NPuzzle:
     *Note: When given a starting state, init DOES NOT check for illegal states. So be sure to
     check that the assigned state is a legal n-puzzle format. Any given state is not guarenteed
     to be solvable. Undefined behaviour may occur if given an illegal/improper starting instance.
+    *Note: When given a starting state, a deep copy is made
     """
 
     state: list[list[int]]
@@ -24,7 +26,7 @@ class NPuzzle:
         if not math.sqrt(n+1).is_integer():
             raise Exception("n+1 must be a perfect square")
         if state is not None:
-            self.state = state
+            self.state = copy.deepcopy(state)
         else:
             self.state = self.goal_state
             self.__randomize__()
