@@ -34,6 +34,8 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
 
     With a verbosity greater than 0 prints out extra information
     Returns . . . (Not sure yet lol)
+    Loosely based on the psuedocode found here: https://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf
+    Also based on the discussion of A* in class and the notes from the lecture
     """
 
     h = puzzle.manhatten_distance()
