@@ -152,7 +152,7 @@ class NPuzzle:
         
         Randomly performs 1000 moves on the puzzle to randomize the tile positions
         """
-        
+
         for i in range(0,1000):
             num = random.randrange(0,1000)/1000
             if num < .25:
