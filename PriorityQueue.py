@@ -1,6 +1,8 @@
 # Author Alex Hemmerlin
 # this file implements a priority queue
 
+from typing import Any
+
 class PriorityQueue(object):
     def __init__(self):
         self.queue = []

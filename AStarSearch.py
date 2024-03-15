@@ -3,7 +3,6 @@
 
 from NPuzzle import NPuzzle
 from PriorityQueue import PriorityQueue
-from typing import Any
 
 def AStarSearch(puzzle: NPuzzle, verbosity: int = 0):
     h = puzzle.manhatten_distance()
