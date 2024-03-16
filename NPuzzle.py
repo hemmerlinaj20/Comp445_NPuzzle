@@ -155,7 +155,7 @@ class NPuzzle:
         Randomly performs 1000 moves on the puzzle to randomize the tile positions
         """
 
-        for i in range(0,200):
+        for i in range(0,1000):
             num = random.randrange(0,1000)/1000
             if num < .25:
                 self.move_up()
@@ -184,6 +184,13 @@ class NPuzzle:
         dist = abs(tile_loc[0] - self.solved_positions[tile][0]) + abs(tile_loc[1] - self.solved_positions[tile][1])
         #print(f'Tile: {tile} Dist: {dist}')
         return dist
+    
+    def string(self):
+        for l in self.state:
+            print('[', end="")
+            for val in l:
+                print(f'{val} ', end = "")
+            print(']')
     
     @property
     def solved_positions(self) -> dict[int:tuple[int,int]]:
