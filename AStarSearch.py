@@ -88,8 +88,8 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
 
 
 if __name__ == '__main__':
-    p1 = NPuzzle(8, [[1,2,3],[4,0,5],[7,8,6]])
-    result = AStarSearch(p1, 2)
+    p1 = NPuzzle(8)
+    result = AStarSearch(p1)
 
     if result != False:
         print(result.priority)
@@ -97,3 +97,11 @@ if __name__ == '__main__':
         print(result.parent.puzzle.state)
     else:
         print('Bad: Most likely unsolvable (At least I hope so lol)')
+
+    parent = result.parent
+    i = 0
+    while parent is not None:
+        parent = parent.parent
+        i += 1
+
+    print(f'Moves: {i}')
