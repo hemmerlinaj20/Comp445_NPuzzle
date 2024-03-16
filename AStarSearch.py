@@ -6,6 +6,13 @@ from typing import Any
 import heapq
 
 class Node:
+    """Data class to store an 8 puzzle state and some useful information
+
+    - priority: priority in the fringe, made up of manhatten distance and number of moves to get there
+    - puzzle: the NPuzzle object at the state
+    - parent: the NPuzzle that this NPuzzle came from (will be one move behind)
+    - moves: the number of moves it took to get to this state
+    """
     priority: int
     puzzle: NPuzzle
     parent: NPuzzle
@@ -35,23 +42,31 @@ def in_list(item, list):
     return False
 
 def generate_successor(successor: NPuzzle, parent: Node, fringe: list[Node], closed: list, verbosity: int):
-    # Check the closed list for this state
+    # Check the closed list for this state: if not in the closed list generate the state
     if not in_list(successor.state, closed):
+        # Create the node for this state
         s_node: Node = Node(successor.manhatten_distance()+parent.moves+1, successor, parent, parent.moves+1)
+
+        # Debugging info
         if verbosity == 2:
             print(f'Generating successor: {s_node.puzzle.state}')
             print(f'With a priority of: {s_node.priority}')
             print()
         # check the fringe for this state and value
         for val in fringe:
+            # if the state is in the fringe with better path to it, just return
             if s_node.puzzle.state == val.puzzle.state and s_node.priority > val.priority:
                 return
+            # else if this state has the better path, replace it in the fringe
             elif s_node.puzzle.state == val.puzzle.state and s_node.priority < val.priority:
                 fringe.remove(val)
                 break
 
+        # Add the node to the fringe
         fringe.append(s_node)
+        # Re organize the fringe (re heap the min heap to keep the priority queue)
         heapq.heapify(fringe)
+    return
 
 def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     """Performs A* Search on the given puzzle instance using the manhatten distance heuristic
@@ -62,14 +77,19 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     Also based on the discussion of A* in class and the notes from the lecture
     """
 
+    # Initialize the fringe with the starting state
     fringe = []
     fringe.append(Node(puzzle.manhatten_distance(), puzzle, None, 0))
+    # Initialize the closed list
     closed = []
+
+    # While the fringe is not empty: loop
     while len(fringe) > 0:
     
         # get the best item in the fringe
         parent: Node = fringe.pop(0)
 
+        # Debugging info
         if verbosity >= 1:
             print(f'State removed from fringe: {parent.puzzle.state}')
             print(f'With a priority of: {parent.priority}')
@@ -80,21 +100,19 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
                     print(f'This state has no parent (start state)')
             print()
 
-        # check if it is the goal
+        # check if it is the goal: if goal -> return
         if parent.puzzle.is_solved:
             return parent
 
-        # add it to the closed list
+        # add it to the closed list: we are exploring it
         closed.append(parent.puzzle.state)
 
-        # Increment the total path distance by one (one more move)
-        #g += 1
-
-        # Generate Successors (4 possible moves)
+        # Generate Successors (4 possible moves: up, down, left, right)
         for i in range(4):
-            # generate copy to manipulate
+            # generate copy of the puzzle to manipulate
             successor: NPuzzle = NPuzzle(parent.puzzle.n, parent.puzzle.state)
-
+            
+            # make the moves and generate the successors
             if i == 0 and successor.move_up():
                 generate_successor(successor, parent, fringe, closed, verbosity)
             if i == 1 and successor.move_right():
@@ -123,10 +141,8 @@ if __name__ == '__main__':
     #print()
 
     parent = result.parent
-    i = 0
     while parent is not None:
         print(parent.puzzle.string())
         parent = parent.parent
-        i += 1
 
-    print(f'Moves: {i}')
+    print(f'Moves: {result.moves}')

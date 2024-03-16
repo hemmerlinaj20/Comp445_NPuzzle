@@ -186,11 +186,13 @@ class NPuzzle:
         return dist
     
     def string(self):
+        s = ""
         for l in self.state:
-            print('[', end="")
+            s += f'[ '
             for val in l:
-                print(f'{val} ', end = "")
-            print(']')
+                s += f'{val} '
+            s += ']\n'
+        return s
     
     @property
     def solved_positions(self) -> dict[int:tuple[int,int]]:
