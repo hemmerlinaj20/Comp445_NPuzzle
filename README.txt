@@ -16,7 +16,7 @@ as main shows the algorithm solving a simple instance of the 8-puzzle. This inst
 The main() method inside of the AStarSearch.py file contains one TODO comment. This comment gives instructions
 on how to change the verbosity parameter of the search to see more detailed information about the algorithm as
 it is running. Simply change the verbosity inside of the AStarSearch() method call to the desired level.
-    The test results of running A* search on random puzzle instances are in the results.py file.
+    The test results of running A* search on random puzzle instances are in the AStarResults.py file.
 
 
 Nathan Steiger

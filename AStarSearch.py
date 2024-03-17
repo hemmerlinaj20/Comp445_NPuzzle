@@ -87,7 +87,10 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     """Performs A* Search on the given puzzle instance using the manhatten distance heuristic
 
     With a verbosity greater than 0 the program prints out extra information (can be set to 0, 1, 2, or 3)
-    Returns . . . (Not sure yet lol)
+
+    Returns a tuple of three items including (the solution node, number of nodes generated, peak fringe size)
+    If the provided puzzle instance is not solvable, returns False.
+
     Loosely based on the psuedocode found here: https://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf
     Also based on the discussion of A* in class and the notes from the lecture
     """
