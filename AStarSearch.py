@@ -63,7 +63,7 @@ def generate_successor(successor: NPuzzle, parent: Node, fringe: list[Node], clo
             if s_node.puzzle.state == val.puzzle.state and s_node.priority > val.priority:
                 if verbosity >= 3:
                     print('Successor NOT added to fringe (a better path has already been found)')
-                return
+                return 1
             # else if this state has the better path, replace it in the fringe
             elif s_node.puzzle.state == val.puzzle.state and s_node.priority < val.priority:
                 if verbosity >= 3:
@@ -79,7 +79,9 @@ def generate_successor(successor: NPuzzle, parent: Node, fringe: list[Node], clo
         fringe.append(s_node)
         # Re organize the fringe (re heap the min heap to keep the priority queue)
         heapq.heapify(fringe)
-    return
+        return 1
+
+    return 0
 
 def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     """Performs A* Search on the given puzzle instance using the manhatten distance heuristic
@@ -90,6 +92,10 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     Also based on the discussion of A* in class and the notes from the lecture
     """
 
+    # Initialize the variables to measure runtime and memory
+    num_nodes_generated = 0
+    peak_fringe_size = 0
+
     # Initialize the fringe with the starting state
     fringe = []
     fringe.append(Node(puzzle.manhatten_distance(), puzzle, None, 0))
@@ -99,6 +105,10 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     # While the fringe is not empty: loop
     while len(fringe) > 0:
     
+        # Update the memory tracking variable to measure peak fringe size
+        if len(fringe) > peak_fringe_size:
+            peak_fringe_size = len(fringe)
+
         # get the best item in the fringe
         parent: Node = fringe.pop(0)
 
@@ -117,7 +127,7 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
         if parent.puzzle.is_solved:
             if verbosity >= 1:
                 print('GOAL FOUND')
-            return parent
+            return (parent, num_nodes_generated, peak_fringe_size)
 
         # add it to the closed list: we are exploring it
         closed.append(parent.puzzle.state)
@@ -131,13 +141,13 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
             
             # make the moves and generate the successors
             if i == 0 and successor.move_up():
-                generate_successor(successor, parent, fringe, closed, verbosity)
+                num_nodes_generated += generate_successor(successor, parent, fringe, closed, verbosity)
             if i == 1 and successor.move_right():
-                generate_successor(successor, parent, fringe, closed, verbosity)
+                num_nodes_generated += generate_successor(successor, parent, fringe, closed, verbosity)
             if i == 2 and successor.move_down():
-                generate_successor(successor, parent, fringe, closed, verbosity)
+                num_nodes_generated += generate_successor(successor, parent, fringe, closed, verbosity)
             if i == 3 and successor.move_left():
-                generate_successor(successor, parent, fringe, closed, verbosity)
+                num_nodes_generated += generate_successor(successor, parent, fringe, closed, verbosity)
 
     # if the fringe is empty without finding a goal state, then the puzzle is unsolvable so return false
     return False
@@ -161,7 +171,7 @@ def main():
     print('SEARCHING')
 
     # TODO: CHANGE VERBOSITY PARAMETER TO SEE MORE DETAILED ALGORITHM INFORMATION (Ranges from [0,3])
-    result = AStarSearch(puzzle = p1, verbosity = 0)
+    result, runtime, memory = AStarSearch(puzzle = p1, verbosity = 2)
 
     print('SEARCH COMPLETE')
     path = get_path(result)
@@ -170,6 +180,9 @@ def main():
     print('PATH:')
     while len(path) > 0:
         print(path.pop(len(path)-1).string())
+
+    print(f'RUNTIME (TOTAL NUMBER OF NODES GENERATED): {runtime}')
+    print(f'MEMORY USAGE (PEAK FRINGE SIZE (NUMBER OF NODES)): {memory}')
 
 if __name__ == '__main__':
     main()
