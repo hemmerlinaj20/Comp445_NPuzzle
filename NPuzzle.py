@@ -186,6 +186,8 @@ class NPuzzle:
         return dist
     
     def string(self):
+        """Returns a string representation of the n-puzzle state"""
+        
         s = ""
         for l in self.state:
             s += f'[ '
@@ -210,7 +212,7 @@ class NPuzzle:
         return solved_positions
 
 if __name__ == '__main__':
-    p1 = NPuzzle(15)
+    p1 = NPuzzle(8)
     p2 = NPuzzle(15)
 
     print(p1.state)
