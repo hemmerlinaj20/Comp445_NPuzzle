@@ -36,33 +36,46 @@ class Node:
         return self.priority != other.priority
 
 def in_list(item, list):
+    """True if the specified item is in the list, False otherwise"""
+
     for val in list:
         if val == item:
             return True
     return False
 
 def generate_successor(successor: NPuzzle, parent: Node, fringe: list[Node], closed: list, verbosity: int):
+    """Generates the successor node for the given puzzle and checks the fringe for other paths to it"""
+
     # Check the closed list for this state: if not in the closed list generate the state
     if not in_list(successor.state, closed):
         # Create the node for this state
         s_node: Node = Node(successor.manhatten_distance()+parent.moves+1, successor, parent, parent.moves+1)
 
         # Debugging info
-        if verbosity == 2:
-            print(f'Generating successor: {s_node.puzzle.state}')
+        if verbosity >= 2:
+            print(f'Generating successor:\n{s_node.puzzle.string()}', end="")
             print(f'With a priority of: {s_node.priority}')
-            print()
+            if verbosity == 2:
+                print()
         # check the fringe for this state and value
         for val in fringe:
             # if the state is in the fringe with better path to it, just return
             if s_node.puzzle.state == val.puzzle.state and s_node.priority > val.priority:
+                if verbosity >= 3:
+                    print('Successor NOT added to fringe (a better path has already been found)')
                 return
             # else if this state has the better path, replace it in the fringe
             elif s_node.puzzle.state == val.puzzle.state and s_node.priority < val.priority:
+                if verbosity >= 3:
+                    print('Successor REPLACES other state/path in the fringe (better than the previoulsy found path)')
                 fringe.remove(val)
                 break
 
         # Add the node to the fringe
+        if verbosity >= 3:
+            print('Successor added to fringe')
+            if verbosity != 2:
+                print()
         fringe.append(s_node)
         # Re organize the fringe (re heap the min heap to keep the priority queue)
         heapq.heapify(fringe)
@@ -71,7 +84,7 @@ def generate_successor(successor: NPuzzle, parent: Node, fringe: list[Node], clo
 def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     """Performs A* Search on the given puzzle instance using the manhatten distance heuristic
 
-    With a verbosity greater than 0 prints out extra information
+    With a verbosity greater than 0 the program prints out extra information (can be set to 0, 1, 2, or 3)
     Returns . . . (Not sure yet lol)
     Loosely based on the psuedocode found here: https://mat.uab.cat/~alseda/MasterOpt/AStar-Algorithm.pdf
     Also based on the discussion of A* in class and the notes from the lecture
@@ -91,21 +104,25 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
 
         # Debugging info
         if verbosity >= 1:
-            print(f'State removed from fringe: {parent.puzzle.state}')
+            print(f'State removed from fringe:\n{parent.puzzle.string()}', end="")
             print(f'With a priority of: {parent.priority}')
-            if verbosity == 2:
+            if verbosity >= 2:
                 if parent.parent is not None:
-                    print(f'This states parent is: {parent.parent.puzzle.state}')
+                    print(f'This states parent is:\n{parent.parent.puzzle.string()}', end="")
                 else:
                     print(f'This state has no parent (start state)')
             print()
 
         # check if it is the goal: if goal -> return
         if parent.puzzle.is_solved:
+            if verbosity >= 1:
+                print('GOAL FOUND')
             return parent
 
         # add it to the closed list: we are exploring it
         closed.append(parent.puzzle.state)
+        if verbosity >= 3:
+            print(f'State added to closed list:\n{parent.puzzle.string()}')
 
         # Generate Successors (4 possible moves: up, down, left, right)
         for i in range(4):
@@ -125,24 +142,34 @@ def AStarSearch(puzzle: NPuzzle, verbosity: int = 0) -> Node:
     # if the fringe is empty without finding a goal state, then the puzzle is unsolvable so return false
     return False
 
+def get_path(result: Node):
+    path = []
+    path.append(result.puzzle)
+    parent: Node = result.parent
+    while parent is not None:
+        path.append(parent.puzzle)
+        parent = parent.parent
+    return path
+
+def main():
+    p1 = NPuzzle(8, [[1,2,3],[4,8,5],[7,0,6]])
+
+    print('STARTING STATE:')
+    
+    print(p1.string())
+
+    print('SEARCHING')
+
+    # TODO: CHANGE VERBOSITY PARAMETER TO SEE MORE DETAILED ALGORITHM INFORMATION (Ranges from [0,3])
+    result = AStarSearch(puzzle = p1, verbosity = 0)
+
+    print('SEARCH COMPLETE')
+    path = get_path(result)
+
+    print(f'PATH LENGTH: {result.moves}')
+    print('PATH:')
+    while len(path) > 0:
+        print(path.pop(len(path)-1).string())
 
 if __name__ == '__main__':
-    p1 = NPuzzle(8)
-    print("Original --------------")
-    print(p1.string())
-    print('-----------------------')
-    #print('Search started')
-    result = AStarSearch(p1)
-    #print('Finished Search')
-
-    #print(result.priority)
-    #print(result.puzzle.string())
-    #print(result.parent.puzzle.state)
-    #print()
-
-    parent = result.parent
-    while parent is not None:
-        print(parent.puzzle.string())
-        parent = parent.parent
-
-    print(f'Moves: {result.moves}')
+    main()
