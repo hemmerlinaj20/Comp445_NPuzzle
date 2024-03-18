@@ -1,4 +1,4 @@
-# Author: [Your Name]
+# Author: Nathan Steiger
 
 from NPuzzle import NPuzzle
 from typing import Any
@@ -150,7 +150,7 @@ def get_path(result: Node):
 
 
 def main():
-    p1 = NPuzzle(8)
+    p1 = NPuzzle(8, [[1,2,3],[4,8,5],[7,0,6]])
 
     print('STARTING STATE:')
     print(p1.string())
