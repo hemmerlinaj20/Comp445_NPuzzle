@@ -4,6 +4,7 @@ from NPuzzle import NPuzzle
 from RBFS import RBFS_Search
 import time
 
+# Changed from 50 to 10 because 50 takes forever lol (also adjusted time)
 num_problem_instances = 10
 max_total_time = 1000 # time in seconds allotted to run the algorithm (may go over, only checks between puzzles)
 

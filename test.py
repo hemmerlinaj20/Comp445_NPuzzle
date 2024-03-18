@@ -2,11 +2,14 @@ from NPuzzle import NPuzzle
 from AStarSearch import AStarSearch
 import time
 
-p1 = NPuzzle(15,[[11,5,0,1],[2,6,4,7],[13,9,12,3],[10,14,15,8]])
+p = [[11,5,0,1],[2,6,4,7],[13,9,12,3],[10,14,15,8]]
+
+p1 = NPuzzle(15)
 
 print('STARTING STATE:')
     
 print(p1.string())
+print(p1.manhatten_distance())
 
 print('SEARCHING')
 
